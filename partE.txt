@@ -34,33 +34,36 @@ Table #1 (90-degree rotation), we can see that this rotation was the slowest
 performed overall. The time per pixel for the col-major 180 degree rotation 
 on the larger file was about 245 nanoseconds, topping the next slowest 
 rotation (col-major 90 degree rotation for the largest input image) by a 
-substantial amount - about 40 nanoseconds. We did not predict that block-major would be slower 
-on a smaller image, but after experimenting with larger files, we still feel that our 
-prediction about col-major 180 degree rotations was correct. 
+substantial amount - about 40 nanoseconds. We did not predict that block-major
+would be slower on a smaller image, but after experimenting with larger files, 
+we still feel that our prediction about col-major 180 degree rotations was 
+correct. 
     
     Our expectations for the 90 degree row-major and col-major rotation 
 performances were also confirmed by our data. As illustrated by Graph #1, 
-the row-major and col-major mapping was about the same, time-wise, as each other. 
-However, we predicted that they would be worse than the block-major mapping of 
-an image of the same size, when in fact, they performed better or about the same 
-as block-major. Row-major and col-major both yielded a time per pixel of about 100 nanoseconds
-for the smallest image, while block-major yielded a result of about 175
-nanoseconds. For the larger images, all three access patterns were right around
-the 175 nanosecond mark. 
+the row-major and col-major mapping was about the same, time-wise, as each 
+other. However, we predicted that they would be worse than the block-major 
+mapping of an image of the same size, when in fact, they performed 
+better or about the same as block-major. Row-major and col-major 
+both yielded a time per pixel of about 100 nanoseconds for the smallest 
+image, while block-major yielded a result of about 175 nanoseconds. For the 
+larger images, all three access patterns were right around the 175 nanosecond 
+mark. 
 
     The block major rotations' performance throughout our experimentation 
-was not quite what we expected. When we were making our predictions, we operated 
-under the assumption that for a blocked array made from a given image, the number of
-elements in each block would be roughly equal to the number of elements in an
-unblocked one-dimensional array (a row of elements in our implementation)
-made from the same image. However, this is not always the case.
-How the data is loaded onto the cache is affected by many factors that can cause
-notable disparities between test results. For one, the dimensions of the image can affect 
-the performance of the different access patterns notably. For example, in relation to
-our original assumption that the number of elements in each block
-would be roughly equal to the number of elements loaded onto the cache at one time 
-when using an unblocked array, considering a very narrow image is helpful in 
-understanding that this is not always the case, as a narrow image would have
+was not quite what we expected. When we were making our predictions, we operated
+under the assumption that for a blocked array made from a given image, the 
+number of elements in each block would be roughly equal to the 
+number of elements in an unblocked one-dimensional array (a 
+row of elements in our implementation) made from the same image. 
+However, this is not always the case. How the data is loaded onto 
+the cache is affected by many factors that can cause notable disparities 
+between test results. For one, the dimensions of the image can affect the 
+performance of the different access patterns notably. For example, 
+in relation to our original assumption that the number of elements in each block
+would be roughly equal to the number of elements loaded onto the cache at one 
+time  when using an unblocked array, considering a very narrow image is helpful
+in understanding that this is not always the case, as a narrow image would have
 relatively few elements stored contiguously in memory. 
 
     Comparing all the data for block-major rotations, we found that this access
