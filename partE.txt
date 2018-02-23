@@ -1,0 +1,56 @@
+Matthew Harrison & Josephine Weidner
+locality part E.
+
+1.5 - Measuring and explaining improvements in locality
+
+    Our implementation of this assignment used the cache in two main ways - to 
+store the pixels of the original image, and to store the pixels of the image to
+which we are writing the transformed version of the image. The different access
+patterns we implemented (row-major, col-major, and block-major) let us explore 
+how the cache stored data, and how we could use the knowledge of that storage 
+to design optimized algorithms.
+
+    We predicted that the fastest access and rotation combination would be a 
+row-major 180 degree rotation. This prediction was validated by our data. As 
+seen in Table #2, the time per input pixel for the row-major 180 degree
+rotations was consistently quicker than the other access patterns - around 55
+nanoseconds each time. This difference is illustrated with the green bar in 
+Graph #2. 
+
+    Our experimentation also supported our prediction for col-major 180 degree
+rotation - that it would be the slowest transformation of all. As shown in Graph
+#2, the col-major 180 degree rotation on the larger files was substantially
+slower than the other rotations. Also, comparing this data to the data from
+Graph #1, we can see that this rotation was the slowest performed.
+We did not predict that block-major would be slower on a
+smaller image, but after reviewing all of the data, we still feel our prediction
+about col-major 180 degree rotations was correct. 
+    The time per pixel for the col-major 180 degree rotation on the larger file
+was about 245 nanoseconds, topping the next slowest rotation (col-major 90
+degree rotation for the largest input image) by about 40 nanoseconds. T
+    
+    Another prediction we made that was somewhat supported by the 
+experimentation was our thoughts on the 90 degree row-major and 
+col-major rotations. We predicted (accurately, as the data in 
+Graph #1 shows) that the row-major and col-major mapping would 
+be about the same, time-wise, as each other. However, we predicted
+that they would be worse than the block-major mapping of an image of the same
+size, when in fact, they performed better or about the same as block-major.
+Row-major and col-major both yielded a time per pixel of about 100 nanoseconds
+for the smallest image, while block-major yielded a result of about 175
+nanoseconds. For the larger images, all three access patterns were right around
+the 175 nanosecond mark. 
+
+    The block major rotations throughout our experimentation were not quite what
+we expected. When we were making our predictions, we operated under the
+assumption that for a blocked array made from a given image, the number of
+elements in each block would be roughly equal to the number of elements in an
+unblocked array made from the same image. However, this assumption turned out to
+be off-base, and our data reflected something different than we expected.
+    Comparing all the data for block-major rotations, we found that this access
+pattern had a very consistent time per pixel value - with every transformation
+showing a time per pixel somewhere between 175 and 190. This means that
+block-major access would be a good "default" access pattern, i.e. one which 
+could be performed on any image with any rotation, as it performs
+relatively well on every image size and rotation type. 
+
