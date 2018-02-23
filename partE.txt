@@ -3,6 +3,11 @@ locality part E.
 
 1.5 - Measuring and explaining improvements in locality
 
+Please see partE.pdf for our table of results.
+Name and model of the computer we ran our tests on: 
+CPU type:
+Clock rate:
+
     Our implementation of this assignment used the cache in two main ways - to 
 store the pixels of the original image, and to store the pixels of the image to
 which we are writing the transformed version of the image. The different access
@@ -14,43 +19,59 @@ to design optimized algorithms.
 row-major 180 degree rotation. This prediction was validated by our data. As 
 seen in Table #2, the time per input pixel for the row-major 180 degree
 rotations was consistently quicker than the other access patterns - around 55
-nanoseconds each time. This difference is illustrated with the green bar in 
-Graph #2. 
+nanoseconds each time. This difference is illustrated by the green bar in 
+Graph #2. Given our implementation of UArray2, which stores elements that 
+are in the same row contiguously in memory, this result makes sense.
 
-    Our experimentation also supported our prediction for col-major 180 degree
-rotation - that it would be the slowest transformation of all. As shown in Graph
-#2, the col-major 180 degree rotation on the larger files was substantially
-slower than the other rotations. Also, comparing this data to the data from
-Graph #1, we can see that this rotation was the slowest performed.
-We did not predict that block-major would be slower on a
-smaller image, but after reviewing all of the data, we still feel our prediction
-about col-major 180 degree rotations was correct. 
-    The time per pixel for the col-major 180 degree rotation on the larger file
-was about 245 nanoseconds, topping the next slowest rotation (col-major 90
-degree rotation for the largest input image) by about 40 nanoseconds. T
+    Our results also supported our prediction for col-major 180 degree
+rotation performance - that it would be the slowest transformation of all, 
+given our UArray2 implementation and the nature of a 180 rotation. This 
+transformation and access type enjoyed the worst spacial locality.
+As shown in Graph #2, the col-major 180 degree 
+rotation on the larger files was substantially slower than the 
+other rotations. Also, comparing this data to the data from
+Table #1 (90-degree rotation), we can see that this rotation was the slowest 
+performed overall. The time per pixel for the col-major 180 degree rotation 
+on the larger file was about 245 nanoseconds, topping the next slowest 
+rotation (col-major 90 degree rotation for the largest input image) by a 
+substantial amount - about 40 nanoseconds. We did not predict that block-major would be slower 
+on a smaller image, but after experimenting with larger files, we still feel that our 
+prediction about col-major 180 degree rotations was correct. 
     
-    Another prediction we made that was somewhat supported by the 
-experimentation was our thoughts on the 90 degree row-major and 
-col-major rotations. We predicted (accurately, as the data in 
-Graph #1 shows) that the row-major and col-major mapping would 
-be about the same, time-wise, as each other. However, we predicted
-that they would be worse than the block-major mapping of an image of the same
-size, when in fact, they performed better or about the same as block-major.
-Row-major and col-major both yielded a time per pixel of about 100 nanoseconds
+    Our expectations for the 90 degree row-major and col-major rotation 
+performances were also confirmed by our data. As illustrated by Graph #1, 
+the row-major and col-major mapping was about the same, time-wise, as each other. 
+However, we predicted that they would be worse than the block-major mapping of 
+an image of the same size, when in fact, they performed better or about the same 
+as block-major. Row-major and col-major both yielded a time per pixel of about 100 nanoseconds
 for the smallest image, while block-major yielded a result of about 175
 nanoseconds. For the larger images, all three access patterns were right around
 the 175 nanosecond mark. 
 
-    The block major rotations throughout our experimentation were not quite what
-we expected. When we were making our predictions, we operated under the
-assumption that for a blocked array made from a given image, the number of
+    The block major rotations' performance throughout our experimentation 
+was not quite what we expected. When we were making our predictions, we operated 
+under the assumption that for a blocked array made from a given image, the number of
 elements in each block would be roughly equal to the number of elements in an
-unblocked array made from the same image. However, this assumption turned out to
-be off-base, and our data reflected something different than we expected.
+unblocked one-dimensional array (a row of elements in our implementation)
+made from the same image. However, this is not always the case.
+How the data is loaded onto the cache is affected by many factors that can cause
+notable disparities between test results. For one, the dimensions of the image can affect 
+the performance of the different access patterns notably. For example, in relation to
+our original assumption that the number of elements in each block
+would be roughly equal to the number of elements loaded onto the cache at one time 
+when using an unblocked array, considering a very narrow image is helpful in 
+understanding that this is not always the case, as a narrow image would have
+relatively few elements stored contiguously in memory. 
+
     Comparing all the data for block-major rotations, we found that this access
 pattern had a very consistent time per pixel value - with every transformation
 showing a time per pixel somewhere between 175 and 190. This means that
 block-major access would be a good "default" access pattern, i.e. one which 
 could be performed on any image with any rotation, as it performs
-relatively well on every image size and rotation type. 
+relatively well on every image size and rotation type. It's important to note 
+that block-major access also outperformed row-major and col-major mapping for 
+the 90-degree rotation for our largest image file, as well as outperforming 
+col-major mapping for the 180 degree rotation on the same image file. 
+While row-major and col-major are more susceptible to change in relation to 
+image size and rotation type, block-major displayed a similar performance.
 
